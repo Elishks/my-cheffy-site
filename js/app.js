@@ -19,7 +19,7 @@ const defaultRecipes = [
         difficulty: "Легко",
         ingredients: [
             { name: "картофель", amount: "5 шт (крупных)" },
-            { name: "яяйцо", amount: "1 шт" },
+            { name: "яйцо", amount: "1 шт" },
             { name: "мука", amount: "2 ст. л." },
             { name: "лук", amount: "1 шт" },
             { name: "масло", amount: "30 мл" }
