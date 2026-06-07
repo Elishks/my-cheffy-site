@@ -6,6 +6,10 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabaseClient = window.supabase ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
 
+let currentAuthMode = 'login';
+let constructorIngredients = [];
+let constructorSteps = [];
+
 const defaultRecipes = [
     {
         id: 1,
@@ -89,6 +93,7 @@ const synonymDictionary = {
 let userIngredientsList = [];
 let inputEl, addBtnEl, tagsContainerEl, searchBtnEl, resultsContainerEl;
 
+
 async function loadRecipesFromCloud() {
     if (!supabaseClient) {
         console.warn("Предупреждение: Supabase JS SDK не загружен на этой странице!");
@@ -127,8 +132,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (document.getElementById('catalog-container')) renderCatalog('all');
     if (document.getElementById('auth-form')) {
-        if (localStorage.getItem('currentUser')) window.location.href = 'profile.html';
+
+      const authForm = document.getElementById('auth-form');
+      authForm.addEventListener('submit', handleAuth);
+
+      if (localStorage.getItem('currentUser')) {
+        window.location.href = 'profile.html';
+      }
     }
+
     if (document.getElementById('profile-block')) checkUserSession();
     if (document.getElementById('my-recipes-container')) renderMyRecipes();
     if (document.getElementById('favorites-container')) renderFavoritesPage();
@@ -375,7 +387,12 @@ function removeConstructorItem(type, index) {
 
 async function createNewRecipe(event) {
     event.preventDefault();
-    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (!currentUser) {
+        alert('Для публикации рецепта необходимо войти в систему');
+        return;
+    }
 
     if (userError || !user) {
         alert('Ошибка! Добавлять рецепты могут только авторизованные пользователи.');
@@ -399,7 +416,7 @@ async function createNewRecipe(event) {
         difficulty: difficulty,
         ingredients: constructorIngredients,
         steps: constructorSteps,
-        author: user.email,
+        author: currentUser.email,
         image: ""
     };
 
