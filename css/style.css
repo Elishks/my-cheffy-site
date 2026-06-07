@@ -1,0 +1,741 @@
+:root {
+    /* Цветовая палитра по совету из ТЗ (Минималистичный / Современный стиль) */
+    --bg-main: #fcfbfa;       /* Очень светло-бежевый, молочный фон для выигрышного отображения блюд */
+    --dark: #1e293b;          /* Глубокий темно-синий / графитовый (для текста и главных акцентов) */
+    --accent: #ff6f61;        /* Сочный коралловый / оранжевый цвет для кнопок поиска и важных действий */
+    --accent-hover: #e65c50;  /* Темно-коралловый при наведении */
+    --danger: #ff4757;        /* Насыщенный красный для сердечек избранного и удаления */
+
+    /* Нейтральные вспомогательные оттенки */
+    --text-muted: #64748b;    /* Спокойный графитово-серый для второстепенного текста */
+    --gray-light: #f1f5f9;    /* Светлая плашка для второстепенных кнопок */
+    --gray-border: #e2e8f0;   /* Тонкие аккуратные границы */
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--dark);
+    margin: 0;
+    padding: 0;
+}
+
+/* Навигация */
+.main-nav {
+    background: white;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    border-bottom: 1px solid var(--gray-border);
+}
+.main-nav a {
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+.main-nav a.active, .main-nav a:hover {
+    background: var(--gray-light);
+    color: var(--accent);
+}
+
+/* Контейнер приложения */
+.app-container {
+    max-width: 850px;
+    margin: 40px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(30, 41, 59, 0.03);
+    border: 1px solid var(--gray-border);
+}
+
+.search-header h1 {
+    margin-top: 0;
+    font-size: 28px;
+    color: var(--dark);
+}
+.search-header p {
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* Поле ввода и теги */
+.input-wrapper {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+#ingredient-input {
+    flex: 1;
+    padding: 14px 20px;
+    border: 2px solid var(--gray-border);
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: 0.2s;
+    color: var(--dark);
+}
+#ingredient-input:focus {
+    border-color: var(--accent);
+}
+#add-btn {
+    padding: 14px 24px;
+    background: var(--dark);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+#add-btn:hover {
+    background: #0f172a; /* Чуть темнее при наведении на базовый графит */
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    min-height: 35px;
+}
+.tag {
+    background: var(--gray-light);
+    border: 1px solid var(--gray-border);
+    padding: 6px 14px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--dark);
+}
+.tag span {
+    cursor: pointer;
+    color: var(--danger);
+    font-weight: bold;
+}
+
+.action-zone {
+    text-align: center;
+    margin: 30px 0;
+}
+.main-search-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 16px 40px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 111, 97, 0.3); /* Тень под цвет новой коралловой кнопки */
+    transition: 0.2s;
+}
+.main-search-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+/* Карточки выдачи */
+.recipe-card {
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.2s;
+}
+.recipe-card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.03);
+}
+.recipe-info { max-width: 70%; }
+.recipe-title { font-size: 20px; margin: 0 0 8px 0; color: var(--dark); }
+.recipe-details { font-size: 14px; color: var(--text-muted); }
+
+.missing-ingredients {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--danger);
+}
+.all-match {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #10b981; /* Приятный мягкий зеленый для 100% совпадения */
+}
+
+.relevance-score {
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 15px;
+    background: #f0fdf4;
+    color: #10b981;
+}
+.relevance-score.low {
+    background: #fef2f2;
+    color: var(--danger);
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 40px;
+}
+
+/* Кнопки-ссылки в профиле */
+.profile-hub-navigation {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+.hub-btn {
+    flex: 1;
+    text-align: center;
+    padding: 15px;
+    background: var(--gray-light);
+    border: 1px solid var(--gray-border);
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+.hub-btn:hover {
+    background: var(--dark);
+    color: white;
+    border-color: var(--dark);
+}
+
+/* Стили подвала (Footer) */
+.main-footer {
+    background: white;
+    border-top: 1px solid var(--gray-border);
+    padding: 20px;
+    margin-top: 60px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+.main-footer a {
+    color: var(--accent);
+    text-decoration: none;
+}
+.main-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Стили для каталога */
+.catalog-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.filter-btn {
+    background-color: var(--gray-light);
+    border: 1px solid var(--gray-border);
+    color: var(--dark);
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+.filter-btn:hover {
+    background-color: var(--gray-border);
+}
+.filter-btn.active {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+/* Стили для формы добавления рецептов */
+.form-constructor-section {
+    background: var(--gray-light);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--gray-border);
+    margin-top: 20px;
+}
+.form-constructor-section label {
+    font-weight: 600;
+    display: block;
+    color: var(--dark);
+}
+.form-constructor-section .hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 4px 0 12px 0;
+}
+.constructor-row {
+    display: flex;
+    gap: 10px;
+}
+.constructor-row input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--gray-border);
+    border-radius: 6px;
+    font-size: 15px;
+    color: var(--dark);
+}
+.add-sub-btn {
+    background: var(--dark);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.add-sub-btn:hover {
+    background: #0f172a;
+}
+.constructor-display-list {
+    margin: 15px 0 0 0;
+    padding-left: 20px;
+}
+.constructor-display-list li {
+    margin-bottom: 8px;
+    font-size: 15px;
+    color: var(--dark);
+}
+.constructor-display-list li span {
+    color: var(--danger);
+    cursor: pointer;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+/* Кнопка удаления рецепта */
+.delete-recipe-btn {
+    background-color: transparent;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+.delete-recipe-btn:hover {
+    background-color: var(--danger);
+    color: white;
+}
+
+/* Кнопка Избранного (Сердечко) */
+.fav-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #cbd5e1;
+    transition: transform 0.2s ease, color 0.2s ease;
+    padding: 5px;
+    line-height: 1;
+}
+.fav-btn:hover {
+    transform: scale(1.2);
+}
+.fav-btn.active {
+    color: var(--danger); /* Применяем сочный красный по совету из ТЗ */
+}
+
+/* ==========================================
+   СТИЛИ ДЛЯ БЛОГА
+   ========================================== */
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.blog-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--gray-border);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.blog-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+}
+
+.blog-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: var(--accent);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.blog-content {
+    padding: 55px 20px 25px 20px;
+}
+.blog-title {
+    font-size: 18px;
+    color: var(--dark);
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+.blog-text {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* ==========================================
+   СТИЛИ ДЛЯ СТРАНИЦЫ ОШИБКИ 404
+   ========================================== */
+.error-code {
+    font-size: 120px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 20px;
+    letter-spacing: -2px;
+    text-shadow: 4px 4px 0px rgba(255, 111, 97, 0.1);
+    animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* ==========================================
+   СТИЛИ ДЛЯ СТРАНИЦЫ АВТОРИЗАЦИИ (LOGIN)
+   ========================================== */
+
+/* Класс для body, который включает фоновое фото */
+body.auth-page {
+    background-image: linear-gradient(rgba(30, 41, 59, 0.4), rgba(30, 41, 59, 0.4)), url('../img/auth-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Центрированный контейнер формы (вместо старого app-container) */
+.auth-container {
+    max-width: 450px;
+    width: 100%;
+    margin: 80px auto;
+    background: rgba(255, 255, 255, 0.95); /* Полупрозрачный белый, чтобы фото просвечивало */
+    backdrop-filter: blur(10px); /* Красивое размытие фона за формой */
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    position: relative; /* Нужно для позиционирования кнопки в углу */
+    box-sizing: border-box;
+}
+
+/* Коралловая кнопка-ссылка в правом верхнем углу */
+.auth-corner-btn {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.auth-corner-btn:hover {
+    background: var(--accent);
+    color: white;
+}
+
+/* Заголовок внутри формы */
+.auth-main-title {
+    margin: 0 0 30px 0;
+    font-size: 24px;
+    color: var(--dark);
+    font-weight: 700;
+}
+
+/* Группа полей ввода */
+.auth-field-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+.auth-field-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--dark);
+}
+.auth-field-group input {
+    width: 100%;
+    padding: 14px 16px; /* Делаем инпуты большими и удобными */
+    border: 2px solid var(--gray-border);
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s;
+    color: var(--dark);
+    box-sizing: border-box;
+}
+.auth-field-group input:focus {
+    border-color: var(--accent);
+    background-color: white;
+}
+
+/* Кнопка отправки на всю ширину */
+.auth-submit-wide {
+    width: 100%;
+    margin-top: 10px;
+    padding: 16px;
+}
+
+/* ==========================================
+   ОФОРМЛЕНИЕ СТРАНИЦЫ АВТОРИЗАЦИИ (ПРАВКИ)
+   ========================================== */
+
+/* Настройка фонового изображения для страницы входа */
+body.auth-page {
+    background-image: linear-gradient(rgba(30, 41, 59, 0.4), rgba(30, 41, 59, 0.4)), url('../img/auth-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Стили карточки формы */
+.auth-container {
+    max-width: 450px;
+    width: 100%;
+    margin: 60px auto;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(8px);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--gray-border);
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Коралловая кнопка в правом верхнем углу карточки */
+.auth-corner-btn {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.auth-corner-btn:hover {
+    background: var(--accent);
+    color: white;
+}
+
+/* Главный заголовок внутри формы */
+.auth-main-title {
+    margin: 0 0 30px 0;
+    font-size: 24px;
+    color: var(--dark);
+    font-weight: 700;
+}
+
+/* Блоки полей ввода (вертикальное выравнивание) */
+.auth-field-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+.auth-field-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--dark);
+}
+
+/* Делаем инпуты большими */
+.auth-field-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--gray-border);
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s;
+    color: var(--dark);
+    box-sizing: border-box;
+}
+.auth-field-group input:focus {
+    border-color: var(--accent);
+    background-color: white;
+}
+
+/* Кнопка "Войти" на всю ширину инпутов */
+.auth-submit-wide {
+    width: 100%;
+    margin-top: 10px;
+    padding: 16px;
+}
+
+.auth-container {
+    background-image: url('../img/bg.jpg'); /* ../ означает "выйти из папки css и зайти в img" */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Делаем заголовки «Вход в систему / Регистрация» белыми */
+.auth-container h2,
+.auth-main-title {
+    color: #ffffff !important;
+}
+
+/* Делаем надписи «E-mail» и «Пароль» белыми */
+.auth-field-group label {
+    color: #ffffff !important;
+}
+
+body.auth-page {
+    background-color: #fef2f2 !important;
+}
+
+/* Прокачка поля названия на странице добавления рецепта */
+.recipe-title-input {
+    width: 100%;
+    padding: 14px 18px !important; /* Делаем поле повыше и просторнее */
+    font-size: 1.2rem !important;   /* Увеличиваем шрифт вводимого текста */
+    border: 2px solid #e0e0e0 !important;
+    border-radius: 8px !important;  /* Скругляем углы */
+    background-color: #ffffff !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* Эффект свечения при клике на поле */
+.recipe-title-input:focus {
+    border-color: #ff6b6b !important; /* Красивый акцентный цвет (можешь заменить на свой коралловый/оранжевый) */
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.2) !important;
+    outline: none;
+}
+
+/* 1. Исправляем слипшиеся кнопки в каталоге */
+.filter-buttons-container {
+    display: flex;
+    flex-wrap: wrap; /* Разрешаем кнопкам переноситься на новую строку */
+    gap: 12px 10px;  /* Первый параметр (12px) задает сочный отступ МЕЖДУ строками, чтобы они не липли */
+    margin-bottom: 30px; /* Отступ от блока кнопок до карточек */
+}
+
+.filter-btn {
+    margin: 0 !important; /* Сбрасываем старые кривые маргины, если они мешают гапу */
+}
+
+/* 2. Меняем пунктир под названием блюда на красивую сплошную линию */
+.recipe-title a {
+    border-bottom: 2px solid var(--accent, #ff6b6b) !important; /* Делаем сплошную (solid) линию толщиной 2px */
+    text-decoration: none !important; /* На всякий случай гасим стандартное подчеркивание */
+    padding-bottom: 2px; /* Чуть-чуть отодвигаем линию от букв, чтобы смотрелось аккуратно */
+}
+
+/* Красивая коралловая кнопка выхода из профиля */
+.profile-block button[onclick="handleLogout()"],
+button.logout-btn {
+    background: transparent !important;       /* Прозрачный фон */
+    color: #ff6b6b !important;                /* Коралловый цвет текста и иконки */
+    border: 2px solid #ff6b6b !important;     /* Коралловая аккуратная рамка */
+    padding: 10px 22px !important;            /* Комфортные внутренние отступы */
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;              /* Чуть более плотный текст */
+    border-radius: 8px !important;            /* Скругление один в один как у инпутов */
+    cursor: pointer;
+    transition: all 0.3s ease !important;     /* Плавная анимация при наведении */
+    margin-top: 15px !important;
+}
+
+/* Эффект при наведении (кнопка мягко заливается коралловым) */
+.profile-block button[onclick="handleLogout()"]:hover,
+button.logout-btn:hover {
+    background: #ff6b6b !important;           /* Фон становится коралловым */
+    color: #ffffff !important;                /* Текст меняется на белый */
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.25) !important; /* Легкое коралловое свечение */
+}
+
+/* Стили для кнопок фильтрации в блоге */
+.blog-filter-btn {
+    background: #f1f3f5;
+    color: #333;
+    border: none;
+    padding: 10px 18px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.blog-filter-btn:hover {
+    background: #e2e6ea;
+}
+
+/* Активное состояние кнопки (коралловая заливка) */
+.blog-filter-btn.active {
+    background: #ff6b6b !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(255, 107, 107, 0.25);
+}
+
+.cheffy-top-bar {
+    background-color: #ff6b6b; /* Яркий цвет */
+    color: white;
+    text-align: center;
+    padding: 8px 0;
+    font-weight: bold;
+    font-size: 0.9rem;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}

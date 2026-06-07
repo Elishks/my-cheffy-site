@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="utf-8">
+    <title>Добавить рецепт — MasterChef</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="cheffy-top-bar">
+    <span>Cheffy – Твой кулинарный помощник</span>
+</div>
+    <nav class="main-nav">
+        <a href="index.html">Поиск</a>
+        <a href="catalog.html">Каталог</a>
+        <a href="login.html">Войти</a>
+        <a href="profile.html">Профиль (Моя Кладовая)</a>
+        <a href="add-recipe.html" class="active">Добавить рецепт</a>
+        <a href="blog.html">Блог/Советы</a>
+    </nav>
+
+    <div class="app-container">
+        <h2>➕ Добавление авторского рецепта</h2>
+        <p style="color: var(--text-muted); margin-bottom: 30px;">Заполните форму ниже, чтобы добавить свой кулинарный шедевр в общую базу данных сайта.</p>
+
+        <form id="add-recipe-form" onsubmit="createNewRecipe(event)">
+            <div class="auth-field-group">
+                <label for="recipe-name">Название блюда</label>
+                <input type="text" id="recipe-name" class="recipe-title-input" placeholder="Например: Классическая лазанья" required>
+            </div>
+
+            <div class="auth-field-group">
+                 <label for="recipe-category">Категория блюда</label>
+                 <select id="recipe-category" class="recipe-title-input">
+                     <option value="breakfast">🍳 Завтрак</option>
+                     <option value="soups">🍜 Суп / Бульон</option>
+                     <option value="main-dishes">🥩 Горячее / Второе</option>
+                     <option value="salads">🥗 Салат</option>
+                     <option value="snacks">🍿 Закуска</option>
+                     <option value="baking">🍰 Выпечка / Десерт</option>
+                     <option value="drinks">🍹 Напиток</option>
+                     <option value="sauces">🍯 Соус / Маринад</option>
+                 </select>
+            </div>
+
+            <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                <div class="auth-field-group" style="flex: 1;">
+                    <label for="recipe-time">⏱️ Время приготовления</label>
+                    <input type="text" id="recipe-time" class="recipe-title-input" placeholder="Например: 30-40 мин" required>
+                </div>
+                <div class="auth-field-group" style="flex: 1;">
+                    <label for="recipe-difficulty">🔥 Сложность</label>
+                    <select id="recipe-difficulty" class="recipe-title-input">
+                        <option value="Легко">Легко</option>
+                        <option value="Средне">Средне</option>
+                        <option value="Сложно">Сложно</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-constructor-section">
+                <label>Ингредиенты блюда</label>
+                <p class="hint">Вводите продукт и его количество отдельно (например: "сыр" и "150 г")</p>
+                <div class="constructor-row" style="display: flex; gap: 10px;">
+                    <input type="text" id="recipe-ing-input" style="flex: 2;" placeholder="Название (например: сыр)">
+                    <input type="text" id="recipe-ing-amount" style="flex: 1;" placeholder="Кол-во (например: 150 г)">
+                    <button type="button" class="add-sub-btn" onclick="addConstructorItem('ing')">Добавить</button>
+                </div>
+                <ul id="constructor-ing-list" class="constructor-display-list"></ul>
+            </div>
+
+            <div class="form-constructor-section">
+                <label>Пошаговое описание приготовления</label>
+                <p class="hint">Опишите детально один шаг (например: "Нарежьте кубиками...")</p>
+                <div class="constructor-row">
+                    <input type="text" id="recipe-step-input" placeholder="Например: Натрите сыр на мелкой тёрке.">
+                    <button type="button" class="add-sub-btn" onclick="addConstructorItem('step')">Добавить шаг</button>
+                </div>
+                <ol id="constructor-step-list" class="constructor-display-list raw-ol"></ol>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button type="submit" class="main-search-btn" style="width: 100%;">🚀 Опубликовать рецепт</button>
+            </div>
+        </form>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p>© 2026 Разработка поисковой системы рецептов. Студент Ульянова Элина 251-333.</p>
+            <p>Контакты техподдержки: <a href="mailto:support@cheffy.ru">support@masterchef.ru</a> | Тел: +7 (999) 123-45-67</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

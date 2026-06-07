@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Блог и советы шеф-повара — MasterChef</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="cheffy-top-bar">
+    <span>Cheffy – Твой кулинарный помощник</span>
+</div>
+    <nav class="main-nav">
+        <a href="index.html">Поиск</a>
+        <a href="catalog.html">Каталог</a>
+        <a href="login.html">Войти</a>
+        <a href="profile.html">Профиль (Моя Кладовая)</a>
+        <a href="add-recipe.html">Добавить рецепт</a>
+        <a href="blog.html" class="active">Блог/Советы</a>
+    </nav>
+
+    <div class="app-container">
+        <h2>🔥 Кулинарный блог и полезные советы</h2>
+        <p style="color: var(--text-muted); margin-bottom: 30px;">Секреты идеальных блюд, кулинарные шпаргалки и лайфхаки от наших шефов, которые сэкономят вам время на кухне.</p>
+
+        <div class="catalog-filters" style="margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 10px;">
+            <button class="blog-filter-btn active" onclick="filterBlog('all', event)">Все публикации</button>
+            <button class="blog-filter-btn" onclick="filterBlog('lifehacks', event)">💡 Лайфхаки</button>
+            <button class="blog-filter-btn" onclick="filterBlog('cheatsheets', event)">📝 Шпаргалки</button>
+            <button class="blog-filter-btn" onclick="filterBlog('secrets', event)">🍳 Секреты шефа</button>
+            <button class="blog-filter-btn" onclick="filterBlog('organization', event)">📦 Организация</button>
+        </div>
+
+        <div class="blog-grid" id="blog-container">
+            </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p>© 2026 Разработка поисковой системы рецептов. Студент Ульянова Элина 251-333.</p>
+            <p>Контакты техподдержки: <a href="mailto:support@cheffy.ru">support@masterchef.ru</a> | Тел: +7 (999) 123-45-67</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

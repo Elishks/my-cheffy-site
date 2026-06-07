@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="utf-8">
+    <title>Мои рецепты — MasterChef</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="cheffy-top-bar">
+    <span>Cheffy – Твой кулинарный помощник</span>
+</div>
+    <nav class="main-nav">
+        <a href="index.html">Поиск</a>
+        <a href="catalog.html">Каталог</a>
+        <a href="login.html">Войти</a>
+        <a href="profile.html">Профиль (Моя Кладовая)</a>
+        <a href="add-recipe.html">Добавить рецепт</a>
+        <a href="blog.html">Блог/Советы</a>
+    </nav>
+
+    <div class="app-container">
+        <div style="margin-bottom: 20px;">
+            <a href="profile.html" class="back-link">← Вернуться в Профиль</a>
+        </div>
+
+        <h2>📓 Моя книга рецептов</h2>
+        <p style="color: var(--text-muted); margin-bottom: 25px;">Здесь собраны все блюда, которые вы создали на сайте. Вы можете просматривать их или удалять.</p>
+
+        <div id="my-recipes-container" class="results-container">
+            </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p>© 2026 Разработка поисковой системы рецептов. Студент Ульянова Элина 251-333.</p>
+            <p>Контакты техподдержки: <a href="mailto:support@cheffy.ru">support@masterchef.ru</a> | Тел: +7 (999) 123-45-67</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
