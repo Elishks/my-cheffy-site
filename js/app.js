@@ -394,9 +394,9 @@ async function createNewRecipe(event) {
         return;
     }
 
-    if (userError || !user) {
-        alert('Ошибка! Добавлять рецепты могут только авторизованные пользователи.');
-        return;
+    if (!currentUser) {
+    alert('Ошибка! Добавлять рецепты могут только авторизованные пользователи.');
+    return;
     }
 
     const title = document.getElementById('recipe-name').value.trim();
