@@ -325,13 +325,16 @@ body {
     background-color: transparent;
     border: 1px solid var(--danger);
     color: var(--danger);
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
+
+    padding: 10px 20px;
+    font-size: 14px;
     font-weight: 600;
-    font-size: 13px;
+
+    border-radius: 12px;
+    cursor: pointer;
     transition: all 0.2s ease;
 }
+
 .delete-recipe-btn:hover {
     background-color: var(--danger);
     color: white;
@@ -738,4 +741,17 @@ button.logout-btn:hover {
     top: 0;
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.edit-recipe-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 111, 97, 0.3);
+    transition: 0.2s;
 }
