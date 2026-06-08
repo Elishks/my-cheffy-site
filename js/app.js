@@ -77,7 +77,7 @@ const defaultRecipes = [
 ];
 
 let recipeDatabase = [...defaultRecipes];
-let basicIngredients = JSON.parse(localStorage.getItem('userPantry')) || ["соль", "перец", "вода", "масло"];
+let basicIngredients = JSON.parse(localStorage.getItem('userPantry')) || ["соль", "перец", "вода", "масло", "сахар", "какао", "сода", "чеснок"];
 
 const synonymDictionary = {
     "картоха": "картофель",
@@ -105,7 +105,8 @@ async function loadRecipesFromCloud() {
             .select('*');
 
         if (error) throw error;
-        recipeDatabase = [...defaultRecipes, ...(data || [])];
+        recipeDatabase = data || [];
+        console.log('Рецепты из Supabase:', data);
     } catch (err) {
         console.error('Ошибка загрузки рецептов из Supabase:', err.message);
     }
@@ -146,7 +147,51 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (document.getElementById('favorites-container')) renderFavoritesPage();
     if (document.getElementById('recipe-full-details')) renderSingleRecipePage();
     if (document.getElementById('blog-container')) renderBlog('all');
+    if (document.getElementById('add-recipe-form')) {
+    loadRecipeForEditing();
+    }
 });
+
+function loadRecipeForEditing() {
+
+    const params = new URLSearchParams(window.location.search);
+    const editId = params.get('edit');
+
+    if (!editId) return;
+
+    const recipe = recipeDatabase.find(
+        r => Number(r.id) === Number(editId)
+    );
+
+    if (!recipe) return;
+
+    document.getElementById('recipe-form-title').textContent =
+    '✏️ Редактирование рецепта';
+
+    document.getElementById('recipe-form-description').textContent =
+        'Измените нужные поля и сохраните обновлённую версию рецепта.';
+
+    document.getElementById('recipe-name').value =
+        recipe.title;
+
+    document.getElementById('recipe-category').value =
+        recipe.category;
+
+    document.getElementById('recipe-time').value =
+        recipe.time;
+
+    document.getElementById('recipe-difficulty').value =
+        recipe.difficulty;
+
+    constructorIngredients = [...recipe.ingredients];
+    constructorSteps = [...recipe.steps];
+
+    renderConstructorList('ing');
+    renderConstructorList('step');
+
+    document.querySelector('.main-search-btn').textContent =
+        '💾 Сохранить изменения';
+}
 
 function getDifficultyFire(difficulty) {
     const diff = String(difficulty).trim().toLowerCase();
@@ -206,6 +251,7 @@ function runSmartSearch() {
             matchesFound.push({
                 id: recipe.id,
                 title: recipe.title,
+                image: recipe.image,
                 displayIngredients: recipe.ingredients.map(i => i.name),
                 missing: missing,
                 score: score,
@@ -245,9 +291,25 @@ function renderResults(recipes) {
             ? `<div class="missing-ingredients">❌ Не хватает: ${r.missing.join(', ')}</div>`
             : `<div class="all-match">✅ У вас есть всё для этого блюда!</div>`;
 
+        console.log("Картинка:", r.image);
         resultsContainerEl.innerHTML += `
-            <div class="recipe-card">
-                <div class="recipe-info">
+            <div class="recipe-card" style="display:flex; gap:15px; align-items:flex-start;">
+
+                ${r.image ? `
+                    <img
+                        src="${r.image}"
+                        alt="${r.title}"
+                        style="
+                            width:120px;
+                            height:120px;
+                            object-fit:cover;
+                            border-radius:12px;
+                            flex-shrink:0;
+                        "
+                    >
+                ` : ''}
+
+                <div class="recipe-info" style="flex:1;">
                     <h3 class="recipe-title">
                         <a href="recipe-single.html?id=${linkId}" style="color: inherit; text-decoration: none;">${r.title}</a>
                     </h3>
@@ -300,10 +362,26 @@ function renderCatalog(categoryFilter = 'all') {
 
         // Исправлено: добавлена строка с автором
         const authorHTML = recipe.author ? `<div style="font-size:0.8rem; color:#888; margin-top:5px;">Автор: ${recipe.author}</div>` : '';
+        console.log(recipe.title, recipe.image);
 
         catalogContainer.innerHTML += `
-            <div class="recipe-card">
-                <div class="recipe-info">
+            <div class="recipe-card" style="display:flex; gap:15px; align-items:flex-start;">
+
+              ${recipe.image ? `
+                  <img
+                      src="${recipe.image}"
+                      alt="${recipe.title}"
+                      style="
+                          width:120px;
+                          height:120px;
+                          object-fit:cover;
+                          border-radius:12px;
+                          flex-shrink:0;
+                      "
+                  >
+              ` : ''}
+
+              <div class="recipe-info" style="flex:1;">
                     <h3 class="recipe-title">
                         <a href="recipe-single.html?id=${linkId}" style="color: inherit; text-decoration: none;">${recipe.title}</a>
                     </h3>
@@ -387,6 +465,8 @@ function removeConstructorItem(type, index) {
 
 async function createNewRecipe(event) {
     event.preventDefault();
+    const params = new URLSearchParams(window.location.search);
+    const editId = params.get('edit');
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     if (!currentUser) {
@@ -409,6 +489,34 @@ async function createNewRecipe(event) {
         return;
     }
 
+    const imageFile = document.getElementById('recipe-image').files[0];
+
+    let imageUrl = '';
+
+    if (editId) {
+        const oldRecipe = recipeDatabase.find(
+            r => Number(r.id) === Number(editId)
+        );
+
+        if (oldRecipe) {
+            imageUrl = oldRecipe.image || '';
+        }
+    }
+
+    if (imageFile) {
+        const fileExt =
+    imageFile.name.split('.').pop();
+
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const { error: uploadError } = await supabaseClient.storage.from('recipe-images').upload(fileName, imageFile);
+        if (uploadError) {
+            alert('Ошибка загрузки изображения: ' + uploadError.message);
+            return;
+        }
+
+        imageUrl = supabaseClient.storage.from('recipe-images').getPublicUrl(fileName).data.publicUrl;
+    }
+
     const newRecipe = {
         title: title,
         category: category,
@@ -417,21 +525,46 @@ async function createNewRecipe(event) {
         ingredients: constructorIngredients,
         steps: constructorSteps,
         author: currentUser.email,
-        image: ""
+        image: imageUrl,
     };
 
     try {
-        const { error } = await supabaseClient
-            .from('customRecipes')
-            .insert([newRecipe]);
 
-        if (error) throw error;
+      let error;
 
-        alert('Ваш рецепт успешно опубликован!');
-        window.location.href = 'catalog.html';
-    } catch (err) {
-        alert('Ошибка при публикации: ' + err.message);
-    }
+      if (editId) {
+
+          const result = await supabaseClient
+              .from('customRecipes')
+              .update(newRecipe)
+              .eq('id', editId);
+
+          error = result.error;
+
+      } else {
+
+          const result = await supabaseClient
+              .from('customRecipes')
+              .insert([newRecipe]);
+
+          error = result.error;
+      }
+
+      if (error) throw error;
+
+      alert(
+          editId
+              ? 'Рецепт успешно обновлён!'
+              : 'Ваш рецепт успешно опубликован!'
+      );
+
+      window.location.href = editId
+        ? 'my-recipes.html'
+        : 'catalog.html';
+
+  } catch (err) {
+      alert('Ошибка при сохранении: ' + err.message);
+  }
 }
 
 function toggleAuthMode() {
@@ -561,8 +694,8 @@ function renderMyRecipes() {
     const currentUser = localStorage.getItem('currentUser');
     if (!currentUser) return;
 
-    const userName = JSON.parse(currentUser).name;
-    const myFiltered = recipeDatabase.filter(r => r.author === userName);
+    const userEmail = JSON.parse(currentUser).email;
+    const myFiltered = recipeDatabase.filter(r => r.author === userEmail);
 
     if (myFiltered.length === 0) {
         container.innerHTML = `<p style="color: var(--text-muted); padding:20px 0;">Вы еще не добавили ни одного рецепта.</p>`;
@@ -573,16 +706,33 @@ function renderMyRecipes() {
         const uniqueId = `cloud_${recipe.id}`;
         const ingString = recipe.ingredients.map(i => i.name).join(', ');
         container.innerHTML += `
-            <div class="recipe-card">
-                <div class="recipe-info">
+            <div class="recipe-card" style="display:flex; gap:15px; align-items:flex-start;">
+
+              ${recipe.image ? `
+                  <img
+                      src="${recipe.image}"
+                      alt="${recipe.title}"
+                      style="
+                          width:120px;
+                          height:120px;
+                          object-fit:cover;
+                          border-radius:12px;
+                      "
+                  >
+              ` : ''}
+                <div class="recipe-info" style="flex:1;">
                     <h3 class="recipe-title"><a href="recipe-single.html?id=${uniqueId}" style="color:inherit; text-decoration:none;">${recipe.title}</a></h3>
                     <div class="recipe-details">Состав: ${ingString}</div>
                 </div>
                 <button class="delete-recipe-btn" onclick="deleteMyRecipe(${recipe.id})">Удалить</button>
+                <button class="edit-recipe-btn" onclick="editMyRecipe(${recipe.id})">Редактировать</button>
             </div>`;
     });
 }
 
+function editMyRecipe(id) {
+    window.location.href = `add-recipe.html?edit=${id}`;
+}
 async function deleteMyRecipe(id) {
     if (!confirm('Удалить этот рецепт из общей базы?')) return;
     if (!supabaseClient) return;
@@ -649,13 +799,35 @@ function renderFavoritesPage() {
         const uniqueId = recipe.author ? `cloud_${recipe.id}` : String(recipe.id);
         const ingString = recipe.ingredients.map(i => i.name).join(', ');
         container.innerHTML += `
-            <div class="recipe-card">
-                <div class="recipe-info">
-                    <h3 class="recipe-title"><a href="recipe-single.html?id=${uniqueId}" style="color:inherit; text-decoration:none;">${recipe.title}</a></h3>
-                    <div class="recipe-details">Состав: ${ingString}</div>
-                </div>
-                <button class="fav-btn active" onclick="toggleFavorite('${uniqueId}', event)">❤️</button>
-            </div>`;
+          <div class="recipe-card" style="display:flex; gap:15px; align-items:flex-start;">
+
+              ${recipe.image ? `
+                  <img
+                      src="${recipe.image}"
+                      alt="${recipe.title}"
+                      style="
+                          width:120px;
+                          height:120px;
+                          object-fit:cover;
+                          border-radius:12px;
+                          flex-shrink:0;
+                      "
+                  >
+              ` : ''}
+
+              <div class="recipe-info" style="flex:1;">
+                  <h3 class="recipe-title">
+                      <a href="recipe-single.html?id=${uniqueId}" style="color:inherit; text-decoration:none;">
+                          ${recipe.title}
+                      </a>
+                  </h3>
+                  <div class="recipe-details">Состав: ${ingString}</div>
+              </div>
+
+              <button class="fav-btn active" onclick="toggleFavorite('${uniqueId}', event)">
+                  ❤️
+              </button>
+          </div>`;
     });
 }
 
@@ -699,6 +871,22 @@ function renderSingleRecipePage() {
             <h1 class="recipe-full-title">🍽️ ${currentRecipe.title}</h1>
             ${authorDisplay}
 
+            ${currentRecipe.image ? `
+              <img
+                  src="${currentRecipe.image}"
+                  alt="${currentRecipe.title}"
+                  style="
+                      width:100%;
+                      max-width:700px;
+                      display:block;
+                      margin:20px auto;
+                      border-radius:16px;
+                      object-fit:cover;
+                      box-shadow:0 4px 12px rgba(0,0,0,0.12);
+                  "
+              >
+          ` : ''}
+
             <div class="recipe-meta-tags" style="margin: 15px 0 25px 0; display:flex; gap:10px;">
                 <span class="badge" style="background: #f5f5f5; color: #333; padding: 6px 12px; border-radius:15px; font-size:0.9rem;">⏱️ ${currentRecipe.time || '30 мин'}</span>
                 <span class="badge" style="background: #e3f2fd; color: #1e88e5; padding: 6px 12px; border-radius:15px; font-size:0.9rem;">Сложность: ${getDifficultyFire(currentRecipe.difficulty)}</span>
@@ -723,7 +911,7 @@ const blogDatabase = [
         category: "lifehacks",
         badge: "Лайфхак",
         title: "Как спасти пересоленный суп или соус?",
-        text: "Если рука дрогнула и соли оказалось слишком много, не паникуйте. Самый простой способ — очистить сырой картофель, разрезать его пополам и бросить в кипящий суп на 10–15 минут. Картошка сработает как природный сорбент и впитает излишки соли."
+        text: "Если рука дрогнула и соли оказалось слишком много, не паникуйте. Самый простой способ – очистить сырой картофель, разрезать его пополам и бросить в кипящий суп на 10-15 минут. Картошка сработает как природный сорбент и впитает излишки соли."
     },
     {
         id: 2,
