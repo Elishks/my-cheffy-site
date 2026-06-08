@@ -21,9 +21,11 @@
     </nav>
 
     <div class="app-container">
-        <h2>➕ Добавление авторского рецепта</h2>
-        <p style="color: var(--text-muted); margin-bottom: 30px;">Заполните форму ниже, чтобы добавить свой кулинарный шедевр в общую базу данных сайта.</p>
-
+        <h2 id="recipe-form-title">➕ Добавление авторского рецепта</h2>
+        <p id="recipe-form-description"
+           style="color: var(--text-muted); margin-bottom: 30px;">
+            Заполните форму ниже, чтобы добавить свой кулинарный шедевр в общую базу данных сайта.
+        </p>
         <form id="add-recipe-form" onsubmit="createNewRecipe(event)">
             <div class="auth-field-group">
                 <label for="recipe-name">Название блюда</label>
@@ -57,6 +59,14 @@
                         <option value="Сложно">Сложно</option>
                     </select>
                 </div>
+                <div class="auth-field-group">
+                  <label for="recipe-image">📷 Фото блюда</label>
+                  <input
+                      type="file"
+                      id="recipe-image"
+                      accept="image/*"
+                      class="recipe-title-input">
+                </div>
             </div>
 
             <div class="form-constructor-section">
@@ -79,6 +89,8 @@
                 </div>
                 <ol id="constructor-step-list" class="constructor-display-list raw-ol"></ol>
             </div>
+
+
 
             <div style="text-align: center; margin-top: 40px;">
                 <button type="submit" class="main-search-btn" style="width: 100%;">🚀 Опубликовать рецепт</button>
